@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { Header, Button, Gap, TextInput } from '../../components';
+import { StyleSheet, Text, View } from 'react-native';
+import { useSelector } from 'react-redux';
+import { Button, Gap, Header, TextInput } from '../../components';
 
 const SignUp = ({ navigation }) => {
+  const globalState = useSelector(state => state.globalReducer);
   return (
     <View style={styles.page}>
       <Header
