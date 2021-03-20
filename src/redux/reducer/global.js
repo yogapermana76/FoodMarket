@@ -11,6 +11,7 @@ export const globalReducer = (state = initGlobalState, action) => {
         isError: action.value.isError,
         message: action.value.message,
       };
+    default:
+      return state;
   }
-  return state;
 };

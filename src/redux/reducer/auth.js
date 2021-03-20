@@ -3,10 +3,6 @@ const initStateRegister = {
   email: '',
   password: '',
   password_confirmation: '',
-  address: '',
-  city: '',
-  houseNumber: '',
-  phoneNumber: '',
 };
 
 export const registerReducer = (state = initStateRegister, action) => {
@@ -14,19 +10,12 @@ export const registerReducer = (state = initStateRegister, action) => {
     case 'SET_REGISTER':
       return {
         ...state,
-        name: state.value.name,
-        email: state.value.email,
-        password: state.value.password,
-        password_confirmation: state.value.password_confirmation,
+        name: action.value.name,
+        email: action.value.email,
+        password: action.value.password,
+        password_confirmation: action.value.password,
       };
-    case 'SET_ADDRESS':
-      return {
-        ...state,
-        address: state.value.address,
-        city: state.value.city,
-        houseNumber: state.value.houseNumber,
-        phoneNumber: state.value.phoneNumber,
-      };
+    default:
+      return state;
   }
-  return state;
 };
