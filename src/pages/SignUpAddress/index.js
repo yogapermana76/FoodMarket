@@ -14,7 +14,7 @@ const SignUpAddress = ({ navigation }) => {
   });
 
   const dispatch = useDispatch();
-  const registerReducer = useSelector(state => state.registerReducer);
+  const { registerReducer, photoReducer } = useSelector(state => state);
 
   const onSubmit = () => {
     const data = {
@@ -25,6 +25,27 @@ const SignUpAddress = ({ navigation }) => {
     axios
       .post('http://foodmarket-backend.buildwithangga.id/api/register', data)
       .then(res => {
+        if (photoReducer.isUploadPhoto) {
+          const photoForUpload = new FormData();
+          photoForUpload.append('file', photoReducer);
+          axios
+            .post(
+              'http://foodmarket-backend.buildwithangga.id/api/user/photo',
+              photoForUpload,
+              {
+                headers: {
+                  Authorization: `${res.data.data.token_type} ${res.data.data.access_token}`,
+                  'Content-Type': 'multipart/form-data',
+                },
+              },
+            )
+            .then(resPhoto => {
+              console.log(resPhoto, '========');
+            })
+            .catch(err => {
+              showMessage('Upload foto tidak berhasil');
+            });
+        }
         dispatch({ type: 'SET_LOADING', value: false });
         showMessage('Register Success', 'success');
         navigation.replace('SuccessSignUp');
