@@ -1,7 +1,8 @@
-import Axios from 'axios';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { Button, Gap, Header, TextInput } from '../../components';
+import { signInAction } from '../../redux/action/auth';
 import { useForm } from '../../utils';
 
 const SignIn = ({ navigation }) => {
@@ -10,16 +11,10 @@ const SignIn = ({ navigation }) => {
     password: '',
   });
 
-  const onSubmit = async () => {
-    try {
-      const res = await Axios.post(
-        'http://foodmarket-backend.buildwithangga.id/api/login',
-        form,
-      );
-      console.log(res, 'success');
-    } catch (error) {
-      console.log(error, 'error');
-    }
+  const dispatch = useDispatch();
+
+  const onSubmit = () => {
+    dispatch(signInAction(form, navigation));
   };
   return (
     <View style={styles.page}>
