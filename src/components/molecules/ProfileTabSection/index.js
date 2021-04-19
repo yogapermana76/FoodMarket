@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
@@ -16,12 +18,19 @@ const renderTabBar = props => (
 );
 
 const Account = () => {
+  const navigation = useNavigation();
+  const signOut = () => {
+    AsyncStorage.multiRemove(['userProfile', 'token']).then(res => {
+      navigation.reset({ index: 0, routes: [{ name: 'SignIn' }] });
+    });
+  };
   return (
     <View style={styles.containerAccount}>
       <ItemListMenu text="Edit Profile" />
       <ItemListMenu text="Home Address" />
       <ItemListMenu text="Security" />
       <ItemListMenu text="Payments" />
+      <ItemListMenu text="Sign Out" onPress={signOut} />
     </View>
   );
 };
