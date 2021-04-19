@@ -17,7 +17,6 @@ export const signUpAction = (
       const token = `${res.data.data.token_type} ${res.data.data.access_token}`;
       const profile = res.data.data.user;
 
-      storeData('userProfile', profile);
       storeData('token', { value: token });
 
       if (photoReducer.isUploadPhoto) {
@@ -30,13 +29,20 @@ export const signUpAction = (
               'Content-Type': 'multipart/form-data',
             },
           })
+          .then(resUpload => {
+            profile.profile_photo_url = `http://foodmarket-backend.buildwithangga.id/storage/${resUpload.data.data[0]}`;
+            storeData('userProfile', profile);
+            navigation.reset({ index: 0, routes: [{ name: 'SuccessSignUp' }] });
+          })
           .catch(err => {
-            console.log(err, 'error upload photo');
             showMessage('Upload foto tidak berhasil');
+            navigation.reset({ index: 0, routes: [{ name: 'SuccessSignUp' }] });
           });
+      } else {
+        storeData('userProfile', profile);
+        navigation.reset({ index: 0, routes: [{ name: 'SuccessSignUp' }] });
       }
       dispatch(setLoading(false));
-      navigation.replace('SuccessSignUp');
     })
     .catch(err => {
       dispatch(setLoading(false));
