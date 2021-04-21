@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Number } from '..';
 import { IcStarOff, IcStarOn } from '../../../assets';
 
 const Rating = ({ number }) => {
@@ -17,7 +18,7 @@ const Rating = ({ number }) => {
   return (
     <View style={styles.ratingContainer}>
       <View style={styles.starContainer}>{renderRating()}</View>
-      <Text>{number}</Text>
+      <Number number={number} type="decimal" />
     </View>
   );
 };
