@@ -1,13 +1,81 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, Gap, Header, ItemListFood, ItemValue } from '../../components';
+import { WebView } from 'react-native-webview';
+import {
+  Button,
+  Gap,
+  Header,
+  ItemListFood,
+  ItemValue,
+  Loading,
+} from '../../components';
+import { API_HOST } from '../../config';
+import { getData } from '../../utils';
 
 const OrderSummary = ({ navigation, route }) => {
   const { item, transaction, userProfile } = route.params;
+  const [token, setToken] = useState('');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [paymentURL, setPaymentURL] = useState('https://google.com');
+
+  useEffect(() => {
+    getData('token').then(res => {
+      setToken(res.value);
+    });
+  }, []);
+
+  const onNavChange = state => {
+    const titleWeb = 'Laravel';
+    if (state.title === titleWeb) {
+      navigation.replace('SuccessOrder');
+    }
+  };
+
+  const onCheckout = () => {
+    const data = {
+      food_id: item.id,
+      user_id: userProfile.id,
+      quantity: transaction.totalItem,
+      total: transaction.total,
+      status: 'PENDING',
+    };
+    axios
+      .post(`${API_HOST.url}/checkout`, data, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(res => {
+        console.log(res);
+        setIsPaymentOpen(true);
+        setPaymentURL(res.data.data.payment_url);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  if (isPaymentOpen) {
+    return (
+      <>
+        <Header
+          title="Payment"
+          subTitle="You deserve better meal"
+          onBack={() => setIsPaymentOpen(false)}
+        />
+        <WebView
+          source={{ uri: paymentURL }}
+          onNavigationStateChange={onNavChange}
+          startInLoadingState={true}
+          renderLoading={() => <Loading />}
+        />
+      </>
+    );
+  }
   return (
     <ScrollView>
       <Header
-        title="Payment"
+        title="Order Summary"
         subTitle="You deserve better meal"
         onBack={() => navigation.goBack()}
       />
@@ -44,10 +112,7 @@ const OrderSummary = ({ navigation, route }) => {
         <ItemValue label="City" value={userProfile.city} />
       </View>
       <View style={styles.button}>
-        <Button
-          text="Checkout Now"
-          onPress={() => navigation.replace('SuccessOrder')}
-        />
+        <Button text="Checkout Now" onPress={onCheckout} />
       </View>
       <Gap height={40} />
     </ScrollView>
