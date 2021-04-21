@@ -37,7 +37,7 @@ const NewTaste = () => {
             price={item.price}
             rating={item.rate}
             image={{ uri: item.picturePath }}
-            onPress={() => navigation.navigate('FoodDetail')}
+            onPress={() => navigation.navigate('FoodDetail', item)}
           />
         );
       })}
@@ -64,7 +64,7 @@ const Popular = () => {
             price={item.price}
             rating={item.rate}
             image={{ uri: item.picturePath }}
-            onPress={() => navigation.navigate('FoodDetail')}
+            onPress={() => navigation.navigate('FoodDetail', item)}
           />
         );
       })}
@@ -91,7 +91,7 @@ const Recommended = () => {
             price={item.price}
             rating={item.rate}
             image={{ uri: item.picturePath }}
-            onPress={() => navigation.navigate('FoodDetail')}
+            onPress={() => navigation.navigate('FoodDetail', item)}
           />
         );
       })}

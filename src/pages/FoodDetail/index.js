@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ImageBackground,
   StyleSheet,
@@ -6,38 +6,48 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { FoodDummy6, IcBackWhite } from '../../assets';
-import { Button, Counter, Rating } from '../../components';
+import { IcBackWhite } from '../../assets';
+import { Button, Counter, Number, Rating } from '../../components';
 
-const FoodDetail = ({ navigation }) => {
+const FoodDetail = ({ navigation, route }) => {
+  const {
+    name,
+    picturePath,
+    description,
+    ingredients,
+    rate,
+    price,
+  } = route.params;
+  const [totalItem, setTotalItem] = useState(1);
+
+  const onCounterChange = value => {
+    setTotalItem(value);
+  };
+
   return (
     <View style={styles.page}>
-      <ImageBackground source={FoodDummy6} style={styles.cover}>
+      <ImageBackground source={{ uri: picturePath }} style={styles.cover}>
         <TouchableOpacity style={styles.back}>
-          <IcBackWhite />
+          <IcBackWhite onPress={() => navigation.goBack()} />
         </TouchableOpacity>
       </ImageBackground>
       <View style={styles.content}>
         <View style={styles.mainContent}>
           <View style={styles.producContainer}>
             <View>
-              <Text style={styles.title}>Cherry Healty</Text>
-              <Rating />
+              <Text style={styles.title}>{name}</Text>
+              <Rating number={rate} />
             </View>
-            <Counter />
+            <Counter onValueChange={onCounterChange} />
           </View>
-          <Text style={styles.desc}>
-            Makanan khas Bandung yang cukup sering dipesan oleh anak muda dengan
-            pola makan yang cukup tinggi dengan mengutamakan diet yang sehat dan
-            teratur.
-          </Text>
+          <Text style={styles.desc}>{description}</Text>
           <Text style={styles.label}>Ingredients:</Text>
-          <Text style={styles.desc}>Seledri, telur, blueberry, madu.</Text>
+          <Text style={styles.desc}>{ingredients}</Text>
         </View>
         <View style={styles.footer}>
           <View style={styles.priceContainer}>
             <Text style={styles.labelTotal}>Total Price:</Text>
-            <Text style={styles.priceTotal}>IDR 12.289.000</Text>
+            <Number style={styles.priceTotal} number={totalItem * price} />
           </View>
           <View style={styles.button}>
             <Button
